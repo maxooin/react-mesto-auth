@@ -12,6 +12,7 @@ import AddPlacePopup from "./AddPlacePopup";
 import {Route, Routes} from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute";
 import Register from "./Register";
+import Login from "./Login";
 
 function App() {
 
@@ -136,7 +137,7 @@ function App() {
                          onCardDelete={handleCardDelete}/>
                  </ProtectedRoute>}/>
           <Route path="/singup" element={<Register/>}/>
-          {/*<Route path="/login" element={<Login/>}/>*/}
+          <Route path="/login" element={<Login/>}/>
         </Routes>
         <Footer/>
 
