@@ -9,10 +9,11 @@ import {CurrentUserContext} from "../contexts/CurrentUserContext";
 import EditProfilePopup from "./EditProfilePopup";
 import EditAvatarPopup from "./EditAvatarPopup";
 import AddPlacePopup from "./AddPlacePopup";
-import {Route, Routes} from "react-router-dom";
+import {redirect, Route, Routes, useNavigate} from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute";
 import Register from "./Register";
 import Login from "./Login";
+import * as Auth from "../utils/auth"
 
 function App() {
 
@@ -23,6 +24,9 @@ function App() {
   const [selectedCard, setSelectedCard] = useState({});
   const [cards, setCards] = useState([]);
   const [loggedIn, setLoggedIn] = useState(false);
+  const [email, setEmail] = useState('');
+  const navigate = useNavigate();
+
 
   function handleEditProfileClick() {
     setIsEditProfilePopupOpen(true)
@@ -38,6 +42,50 @@ function App() {
 
   function handleCardClick(card) {
     setSelectedCard(card)
+  }
+
+  function login() {
+    setLoggedIn(true)
+  }
+
+  function handleLogin(email, pwd) {
+    Auth.login(email, pwd)
+      .then((res) => {
+        if (res.token) {
+          localStorage.setItem('token', res.token);
+          login();
+          redirect('/');
+        }
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }
+
+  function handleSingUp(email, pwd) {
+    Auth.singup(email, pwd)
+      .then((res) => {
+        if (res.data) {
+          redirect('/singin')
+        }
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }
+
+  function checkToken() {
+    const token = localStorage.getItem('token');
+    if (token) {
+      Auth.checkToken(token)
+        .then((res) => {
+          if (res) {
+            setEmail(res.data.email);
+            login()
+            redirect('/')
+          }
+        });
+    }
   }
 
   function handleUpdateUser(item) {
@@ -120,24 +168,34 @@ function App() {
       })
   }, [])
 
+  useEffect(() => {
+    checkToken();
+  }, [localStorage])
+
   return (
     <div className="app">
       <CurrentUserContext.Provider value={currentUser}>
         <Header/>
         <Routes>
           <Route exact path="/"
-                 loggedIn={loggedIn}
-                 element={<ProtectedRoute>
-                   <Main onEditProfile={handleEditProfileClick}
+                 element={<ProtectedRoute loggedIn={loggedIn}
+                                          component={Main}
+                                          onEditProfile={handleEditProfileClick}
+                                          onAddPlace={handleAddPlaceClick}
+                                          onEditAvatar={handleEditAvatarClick}
+                                          onCardClick={handleCardClick}
+                                          cards={cards}
+                                          onCardLike={handleCardLike}
+                                          onCardDelete={handleCardDelete}/>}/>
+          {/* <Main onEditProfile={handleEditProfileClick}
                          onAddPlace={handleAddPlaceClick}
                          onEditAvatar={handleEditAvatarClick}
                          onCardClick={handleCardClick}
                          cards={cards}
                          onCardLike={handleCardLike}
-                         onCardDelete={handleCardDelete}/>
-                 </ProtectedRoute>}/>
-          <Route path="/singup" element={<Register/>}/>
-          <Route path="/login" element={<Login/>}/>
+                         onCardDelete={handleCardDelete}/>*/}
+          <Route path="/singup" element={<Register onSingUp={handleSingUp}/>}/>
+          <Route path="/singin" element={<Login onLogin={handleLogin}/>}/>
         </Routes>
         <Footer/>
 

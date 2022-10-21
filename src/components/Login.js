@@ -1,6 +1,6 @@
 import {useState} from "react";
 
-const Login = () => {
+function Login(props) {
   const [email, setEmail] = useState('');
   const [pwd, setPwd] = useState('');
 
@@ -12,9 +12,15 @@ const Login = () => {
     setPwd(evt.target.value);
   }
 
+  function handleLogIn(evt) {
+    evt.preventDefault()
+    props.onLogin(email, pwd)
+  }
+
   return (
     <section className="login">
-      <form className="login__form">
+      <form className="login__form"
+            onSubmit={handleLogIn}>
         <h2 className="login__title">Вход</h2>
         <input className="login__input"
                name="email"
