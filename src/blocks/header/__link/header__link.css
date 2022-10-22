@@ -5,4 +5,9 @@
   line-height: 1.2;
   color: #FFFFFF;
   text-decoration: none;
+  transition: opacity 0.5s;
+}
+
+.header__link:hover {
+  opacity: .6;
 }
