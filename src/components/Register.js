@@ -1,5 +1,7 @@
 import {useState} from "react";
+import Form from '../components/Form'
 import {Link} from "react-router-dom";
+
 
 function Register(props) {
   const [email, setEmail] = useState('');
@@ -20,9 +22,9 @@ function Register(props) {
 
   return (
     <section className="singup">
-      <form className="singup__form"
+      <Form title="Регистрация"
+            textbtn="Зарегистрироваться"
             onSubmit={handleSubmit}>
-        <h2 className="singup__title">Регистрация</h2>
         <input className="singup__input"
                name="email"
                type="email"
@@ -41,11 +43,10 @@ function Register(props) {
                onChange={handelePwdChange}
                placeholder="Пароль"
                required/>
-        <button className="singup__button">Зарегистрироваться</button>
-        <p className="singup__text">Уже зарегистрированы?
-          <Link className="singup__link" to="/singin"> Войти</Link>
-        </p>
-      </form>
+      </Form>
+      <p className="singup__text">Уже зарегистрированы?
+        <Link className="singup__link" to="/singin"> Войти</Link>
+      </p>
     </section>
   )
 }

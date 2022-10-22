@@ -1,4 +1,5 @@
 import {useState} from "react";
+import Form from "../components/Form"
 
 function Login(props) {
   const [email, setEmail] = useState('');
@@ -19,9 +20,9 @@ function Login(props) {
 
   return (
     <section className="login">
-      <form className="login__form"
-            onSubmit={handleLogIn}>
-        <h2 className="login__title">Вход</h2>
+      <Form title="Вход"
+      textbtn="Войти"
+      onSubmit={handleLogIn}>
         <input className="login__input"
                name="email"
                type="email"
@@ -40,8 +41,7 @@ function Login(props) {
                onChange={handelePwdChange}
                placeholder="Пароль"
                required/>
-        <button className="login__button">Войти</button>
-      </form>
+      </Form>
     </section>
   )
 }
