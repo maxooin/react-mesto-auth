@@ -53,3 +53,6 @@
 @import url(blocks/form/form.css);
 @import url(blocks/form/__title/form__title.css);
 @import url(blocks/form/__button/form__button.css);
+@import url(blocks/infotip/infotip.css);
+@import url(blocks/infotip/__icon/infotip__icon.css);
+@import url(blocks/infotip/__text/infotip__text.css);

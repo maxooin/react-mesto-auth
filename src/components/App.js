@@ -9,11 +9,14 @@ import {CurrentUserContext} from "../contexts/CurrentUserContext";
 import EditProfilePopup from "./EditProfilePopup";
 import EditAvatarPopup from "./EditAvatarPopup";
 import AddPlacePopup from "./AddPlacePopup";
-import { Route, Routes, useNavigate } from "react-router-dom";
+import {Route, Routes, useNavigate} from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute";
 import Register from "./Register";
 import Login from "./Login";
 import * as Auth from "../utils/auth"
+import InfoTooltip from "./InfoTooltip";
+import okIcon from '../image/icon/ok-icon.svg'
+import errIcon from '../image/icon/err-icon.svg'
 
 function App() {
 
@@ -25,6 +28,10 @@ function App() {
   const [cards, setCards] = useState([]);
   const [loggedIn, setLoggedIn] = useState(false);
   const [email, setEmail] = useState('');
+  const [infoText, setInfoText] = useState('');
+  const [infoIcon, setInfoIcon] = useState();
+  const [isInfoTipOpen, setIsInfoTipOpen] = useState(false);
+
   const navigate = useNavigate();
 
 
@@ -46,6 +53,10 @@ function App() {
 
   function login() {
     setLoggedIn(true)
+  }
+
+  function handleInfoTipOpen() {
+    setIsInfoTipOpen(true)
   }
 
   function handleLogin(email, pwd) {
@@ -73,12 +84,17 @@ function App() {
     Auth.singup(email, pwd)
       .then((res) => {
         if (res.data) {
+          setInfoIcon(okIcon)
+          setInfoText('Вы успешно зарегистрировались!')
           navigate('/singin')
         }
       })
       .catch((err) => {
+        setInfoIcon(errIcon)
+        setInfoText('Что-то пошло не так! Попробуйте ещё раз.')
         console.log(err)
       })
+    handleInfoTipOpen();
   }
 
   function checkToken() {
@@ -154,6 +170,7 @@ function App() {
     setIsEditProfilePopupOpen(false)
     setIsAddPlacePopupOpen(false)
     setIsEditAvatarPopupOpen(false)
+    setIsInfoTipOpen(false)
     setSelectedCard({})
   }
 
@@ -219,6 +236,11 @@ function App() {
 
         <ImagePopup card={selectedCard}
                     onClose={closeAllPopup}/>
+
+        <InfoTooltip infoText={infoText}
+                     infoIcon={infoIcon}
+                     onClose={closeAllPopup}
+                     isOpen={isInfoTipOpen}/>
       </CurrentUserContext.Provider>
     </div>
   );
