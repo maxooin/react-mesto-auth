@@ -9,7 +9,7 @@ import {CurrentUserContext} from "../contexts/CurrentUserContext";
 import EditProfilePopup from "./EditProfilePopup";
 import EditAvatarPopup from "./EditAvatarPopup";
 import AddPlacePopup from "./AddPlacePopup";
-import {redirect, Route, Routes, useNavigate} from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute";
 import Register from "./Register";
 import Login from "./Login";
@@ -54,7 +54,7 @@ function App() {
         if (res.token) {
           localStorage.setItem('token', res.token);
           login();
-          redirect('/');
+          navigate('/');
         }
       })
       .catch((err) => {
@@ -62,11 +62,17 @@ function App() {
       })
   }
 
+  function handleLogOut() {
+    setLoggedIn(false);
+    localStorage.removeItem('token');
+    navigate('/singin');
+  }
+
   function handleSingUp(email, pwd) {
     Auth.singup(email, pwd)
       .then((res) => {
         if (res.data) {
-          redirect('/singin')
+          navigate('/singin')
         }
       })
       .catch((err) => {
@@ -82,7 +88,7 @@ function App() {
           if (res) {
             setEmail(res.data.email);
             login()
-            redirect('/')
+            navigate('/')
           }
         });
     }
@@ -175,7 +181,8 @@ function App() {
   return (
     <div className="app">
       <CurrentUserContext.Provider value={currentUser}>
-        <Header/>
+        <Header loggedIn={loggedIn}
+                onLogOut={handleLogOut}/>
         <Routes>
           <Route exact path="/"
                  element={<ProtectedRoute loggedIn={loggedIn}
@@ -187,13 +194,6 @@ function App() {
                                           cards={cards}
                                           onCardLike={handleCardLike}
                                           onCardDelete={handleCardDelete}/>}/>
-          {/* <Main onEditProfile={handleEditProfileClick}
-                         onAddPlace={handleAddPlaceClick}
-                         onEditAvatar={handleEditAvatarClick}
-                         onCardClick={handleCardClick}
-                         cards={cards}
-                         onCardLike={handleCardLike}
-                         onCardDelete={handleCardDelete}/>*/}
           <Route path="/singup" element={<Register onSingUp={handleSingUp}/>}/>
           <Route path="/singin" element={<Login onLogin={handleLogin}/>}/>
         </Routes>
