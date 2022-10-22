@@ -54,6 +54,7 @@ function App() {
         if (res.token) {
           localStorage.setItem('token', res.token);
           login();
+          setEmail(email)
           navigate('/');
         }
       })
@@ -182,7 +183,8 @@ function App() {
     <div className="app">
       <CurrentUserContext.Provider value={currentUser}>
         <Header loggedIn={loggedIn}
-                onLogOut={handleLogOut}/>
+                onLogOut={handleLogOut}
+                email={email}/>
         <Routes>
           <Route exact path="/"
                  element={<ProtectedRoute loggedIn={loggedIn}
