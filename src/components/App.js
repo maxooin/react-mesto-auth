@@ -194,7 +194,7 @@ function App() {
 
   useEffect(() => {
     checkToken();
-  }, [localStorage])
+  }, [])
 
   return (
     <div className="app">

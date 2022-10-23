@@ -1,26 +1,23 @@
 import logo from "../image/logo/logo.svg";
-import {Link, useLocation} from "react-router-dom";
+import {Link, Route, Routes} from "react-router-dom";
 
 function Header(props) {
-  const location = useLocation();
-  const link = `${location.pathname === '/singin' ? '/singup' : '/singin'}`;
-  const title = `${location.pathname === '/singin' ? 'Регистрация' : 'Войти'}`;
 
   return (
     <header className="header">
       <img src={logo} alt="Логотип" className="header__logo"/>
-      {!props.loggedIn  && (
-        <Link className="header__link" to={link}>
-          {title}
-        </Link>
-      )}
       {props.loggedIn && (
         <nav className="header__nav">
           <span className="header__email">{props.email}</span>
           <button className="header__button" onClick={props.onLogOut}>Выйти</button>
         </nav>
       )}
-
+      {!props.loggedIn && (
+        <Routes>
+          <Route path='/singin' element={<Link className="header__link" to='/singup'>Регистрация</Link>}/>
+          <Route path='/singup' element={<Link className="header__link" to='/singin'>Войти</Link>}/>
+        </Routes>
+      )}
     </header>
   )
 }
